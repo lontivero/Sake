@@ -8,7 +8,11 @@ namespace Sake
 {
     public interface IMixer
     {
-        public IEnumerable<IEnumerable<decimal>> CompleteMix(IEnumerable<IEnumerable<decimal>> inputs)
+		uint InputSize { get; }
+		uint OutputSize { get; }
+		IOrderedEnumerable<ulong> Denominations { get; }
+
+		public IEnumerable<IEnumerable<decimal>> CompleteMix(IEnumerable<IEnumerable<decimal>> inputs)
             => CompleteMix(inputs.Select(x => x.Select(y => y.ToSats()))).Select(x => x.Select(y => y.ToBtc()));
 
         public IEnumerable<IEnumerable<ulong>> CompleteMix(IEnumerable<IEnumerable<ulong>> inputs)

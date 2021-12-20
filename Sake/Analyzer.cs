@@ -42,10 +42,10 @@ namespace Sake
         public static decimal AverageAnonsetGain(IEnumerable<decimal> values)
             => AverageAnonsetGain(values.Select(x => x.ToSats()));
 
-        /// <summary>
-        /// Calculates how much anonymity set an average amount gained in the coinjoin.
-        /// </summary>
-        public static decimal AverageAnonsetGain(IEnumerable<ulong> values)
+		/// <summary>
+		/// Calculates how much anonymity set an average amount gained in the coinjoin.
+		/// </summary>
+		public static decimal AverageAnonsetGain(IEnumerable<ulong> values)
         {
             var totalAnonsetWeighted = 0ul;
 
@@ -65,5 +65,18 @@ namespace Sake
             var avgAnon = AverageAnonsetGain(inputs, outputs);
             return avgAnon / (size / 1000m);
         }
+
+        public static decimal PrivacyEfficiency(IEnumerable<IEnumerable<decimal>> inputs, IEnumerable<IEnumerable<decimal>> outputs, decimal feePaid)
+        {
+            var avgAnon = AverageAnonsetGain(inputs, outputs);
+            return (avgAnon / feePaid) / 1_000;
+        }
+
+		public static int NonStandardOutputs(IEnumerable<IEnumerable<decimal>> outputGroups, IEnumerable<ulong> denoms)
+		{
+			var outputs = outputGroups.SelectMany(x => x).Select(x => x.ToSats());
+            var denomsHashSet = denoms.ToHashSet();
+            return outputs.Count( x => !denomsHashSet.Contains(x) );
+		}
     }
 }
